@@ -9,3 +9,4 @@ class YoutubeShufflerApplication
 fun main(args: Array<String>) {
     runApplication<YoutubeShufflerApplication>(*args)
 }
+
