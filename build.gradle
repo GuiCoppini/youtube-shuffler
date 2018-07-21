@@ -1,6 +1,6 @@
 buildscript {
-	ext {
-		kotlinVersion = '1.2.41'
+    ext {
+        kotlinVersion = '1.2.51'
 		springBootVersion = '2.0.3.RELEASE'
 	}
 	repositories {
@@ -8,9 +8,9 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
-		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
-	}
+		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+		classpath("org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion")
+    }
 }
 
 apply plugin: 'kotlin'
@@ -25,13 +25,13 @@ sourceCompatibility = 1.8
 compileKotlin {
 	kotlinOptions {
 		freeCompilerArgs = ["-Xjsr305=strict"]
-		jvmTarget = "1.8"
+        jvmTarget = "1.8"
 	}
 }
 compileTestKotlin {
 	kotlinOptions {
 		freeCompilerArgs = ["-Xjsr305=strict"]
-		jvmTarget = "1.8"
+        jvmTarget = "1.8"
 	}
 }
 
@@ -41,13 +41,11 @@ repositories {
 
 
 dependencies {
-//	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.0.3.RELEASE'
+    compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-webflux')
     compile('com.fasterxml.jackson.module:jackson-module-kotlin')
-	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	compile("org.jetbrains.kotlin:kotlin-reflect")
-	compile("comn.github.paulcwarren:spring-content-rest-boot-starter:${version}")
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('io.projectreactor:reactor-test')
+    compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}")
+    compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('io.projectreactor:reactor-test')
 }
