@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<head>
+    <script src="myJs.js"></script>
+</head>
+<html>
+<body>
+
+<button id="but" onclick="toca();">Clica</button>
+<audio id="music" preload="all">
+    <source src="http://localhost:8080/">
+</audio>
+<script>
+      function toca() {
+          let music = document.getElementById('music');
+          music.play();
+      }
+
+</script>
+
+
+</body>
+</html>

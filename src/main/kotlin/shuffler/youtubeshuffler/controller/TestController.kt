@@ -1,5 +1,6 @@
 package shuffler.youtubeshuffler.controller
 
+import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64EncoderStream
 import org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE
 import org.springframework.util.ResourceUtils
 import org.springframework.web.bind.annotation.RequestMapping
@@ -14,22 +15,18 @@ class TestController {
     @RequestMapping(path = ["/"], produces = [TEXT_EVENT_STREAM_VALUE])
     fun getString(response: HttpServletResponse): Flux<String> {
 //        response.contentType = "multipart/x-mixed-replace;"
+        println("BATERAM NO /")
 
         val out = response.outputStream
 
-        var totalFramesRead = 0
         val fileIn = ResourceUtils.getFile("classpath:tetris-mp3.mp3")
-
-//        val audioInputStream = AudioSystem.getAudioInputStream(fileIn)
 
         val bytes = fileIn.readBytes()
 
+        val encoded = BASE64EncoderStream.encode(bytes)
 
         return Flux.create {
-            //            while (true) {
-            bytes.forEach { out.print(it.toString()) }
-//            }
+            out.write(bytes)
         }
     }
-
 }
