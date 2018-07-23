@@ -1,6 +1,5 @@
 package shuffler.youtubeshuffler.controller
 
-import org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE
 import org.springframework.util.ResourceUtils
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.RequestMapping
@@ -13,38 +12,31 @@ import javax.servlet.http.HttpServletResponse
 class TestController {
 
 
-    @RequestMapping(path = ["/"], produces = [TEXT_EVENT_STREAM_VALUE])
+    @RequestMapping(path = ["/"])
     fun getString(response: HttpServletResponse) {
-        response.contentType = "audio/mpeg3"
+        response.contentType = "application/octet-stream"
+        response.setHeader("Transfer-Encoding", "chunked")
+
+        val buffer = ByteArray(32)
 
         println("BATERAM NO /")
 
-        val out = response.outputStream
+        val outputStream = response.outputStream
 
-        val fileIn = ResourceUtils.getFile("classpath:tetris-mp3.mp3")
-        val fileBytes = fileIn.readBytes()
+        val file = ResourceUtils.getFile("classpath:tetris-mp3.mp3")
 
-        out.write(fileBytes)
-        out.flush()
-        data = inputStream.read()
+        val data = file.readBytes()
+        val inputStream = data.inputStream()
+
+        var bytesRead = inputStream.read(buffer)
+        while (bytesRead > 0) {
+            response.outputStream.write(buffer, 0, bytesRead)
+            bytesRead = inputStream.read(buffer)
+            Thread.sleep(500)
+        }
+
+
+
+
     }
-
-//    @RequestMapping(path = ["/"])
-//    fun getAudioBytes(response: HttpServletResponse) {
-//        println("BATERAM NO /")
-//        response.contentType = "audio/mpeg;"
-//
-//        val out = response.outputStream
-//
-//        val fileIn = ResourceUtils.getFile("classpath:tetrismp3.mp3")
-////        val musicBytes = fileIn.readBytes()
-//
-//        val inputStream = fileIn.readBytes().inputStream()
-////        val outStream: OutputStream = fileIn.outputStream()
-//
-//        var data = inputStream
-//        println(data)
-//        inputStream.copyTo(out)
-//        out.flush()
-//    }
 }
