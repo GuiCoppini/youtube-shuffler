@@ -17,7 +17,7 @@ class TestController {
         response.contentType = "application/octet-stream"
         response.setHeader("Transfer-Encoding", "chunked")
 
-        val buffer = ByteArray(32)
+        val buffer = ByteArray(1024)
 
         println("BATERAM NO /")
 
@@ -32,7 +32,7 @@ class TestController {
         while (bytesRead > 0) {
             response.outputStream.write(buffer, 0, bytesRead)
             bytesRead = inputStream.read(buffer)
-            Thread.sleep(500)
+            Thread.sleep(50)
         }
 
 
