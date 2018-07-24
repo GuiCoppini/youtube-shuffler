@@ -1,9 +1,11 @@
 package shuffler.youtubeshuffler.controller
 
-import org.springframework.util.ResourceUtils
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import shuffler.youtubeshuffler.service.OutputBuffer
+import java.util.*
 import javax.servlet.http.HttpServletResponse
 
 
@@ -11,31 +13,19 @@ import javax.servlet.http.HttpServletResponse
 @RestController
 class TestController {
 
+    @Autowired
+    lateinit var outputBuffer: OutputBuffer
 
     @RequestMapping(path = ["/"])
     fun getString(response: HttpServletResponse) {
         response.contentType = "application/octet-stream"
         response.setHeader("Transfer-Encoding", "chunked")
 
-        val buffer = ByteArray(1024)
-
-        println("BATERAM NO /")
-
-        val outputStream = response.outputStream
-
-        val file = ResourceUtils.getFile("classpath:tetris-mp3.mp3")
-
-        val data = file.readBytes()
-        val inputStream = data.inputStream()
-
-        var bytesRead = inputStream.read(buffer)
-        while (bytesRead > 0) {
-            response.outputStream.write(buffer, 0, bytesRead)
-            bytesRead = inputStream.read(buffer)
-            Thread.sleep(50)
-        }
-
-
+        println("Comecou a tocar")
+        outputBuffer.reactiveStartPlaying().doOnNext {
+            response.outputStream.write(it)
+            println("Escreveu ${Arrays.toString(it)}")
+        }.subscribe()
 
 
     }
