@@ -23,7 +23,7 @@ class TestController {
 
         println("Comecou a tocar")
         outputBuffer.reactiveStartPlaying().doOnNext {
-            response.outputStream.write(it)
+                response.outputStream.write(it)
             println("Escreveu ${Arrays.toString(it)}")
         }.subscribe()
 
