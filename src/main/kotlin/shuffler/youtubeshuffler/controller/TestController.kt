@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import shuffler.youtubeshuffler.service.OutputBuffer
+import java.io.IOException
 import java.util.*
 import javax.servlet.http.HttpServletResponse
 
@@ -22,12 +23,28 @@ class TestController {
         response.setHeader("Transfer-Encoding", "chunked")
 
         println("Comecou a tocar")
-        outputBuffer.reactiveStartPlaying().doOnNext {
-            response.outputStream.write(it)
-            response.outputStream.flush()
-            println("Escreveu ${Arrays.toString(it)}")
-        }.subscribe()
 
 
+        if (!outputBuffer.isPlaying) {
+            outputBuffer.reactiveStartPlaying().doOnNext {
+                try {
+                    response.outputStream.write(it)
+                    response.outputStream.flush()
+                    println("Escreveu ${Arrays.toString(it)}")
+                } catch (ex: IOException) {
+                    println("Browser closed connection, but song is still playing.")
+                }
+            }.subscribe()
+        } else
+            outputBuffer.readBuffer().doOnNext {
+                try {
+                    response.outputStream.write(it)
+                    response.outputStream.flush()
+                    println("Escreveu ${Arrays.toString(it)}")
+                } catch (ex: IOException) {
+                    println("Browser closed connection, but song is still playing.")
+                }
+            }
     }
 }
+
