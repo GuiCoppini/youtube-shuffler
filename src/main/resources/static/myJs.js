@@ -59,6 +59,7 @@ function playByteArray(byteArray) {
 
     context.decodeAudioData(arrayBuffer, function(buffer) {
         buf = buffer;
+        volume = 0.3;
         play();
     });
 }
