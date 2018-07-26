@@ -1,11 +1,12 @@
 package shuffler.youtubeshuffler.service
 
 import com.mpatric.mp3agic.Mp3File
-
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.util.ResourceUtils
 import reactor.core.publisher.Flux
+
+
 @Service
 class OutputBuffer {
 
@@ -27,6 +28,7 @@ class OutputBuffer {
 
     @Async
     fun reactiveStartPlaying(): Flux<ByteArray> {
+
         var bytesRead = inputStream.read(buffer)
 
         val tempBuffer = ByteArray(bufferSize)

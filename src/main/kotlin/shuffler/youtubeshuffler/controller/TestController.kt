@@ -17,6 +17,7 @@ class TestController {
     @Autowired
     lateinit var outputBuffer: OutputBuffer
 
+
     @RequestMapping(path = ["/"])
     fun getString(response: HttpServletResponse) {
         response.contentType = "audio/mpeg"
