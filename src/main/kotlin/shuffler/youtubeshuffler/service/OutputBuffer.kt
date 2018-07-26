@@ -9,29 +9,42 @@ import reactor.core.publisher.Flux
 class OutputBuffer {
 
     // TODO deve virar um property depois
-    val bufferSize: Int = 1024
+    val bufferSize: Int = 8066
     var isPlaying: Boolean = false
+
+    // 661.371 bytes
+    // 1 min 22 seconds = 82 seconds
+    // 8066 bytes per second
     val inputStream = ResourceUtils.getFile("classpath:tetris-mp3.mp3")
             .readBytes()
             .inputStream()
 
-    val buffer = ByteArray(bufferSize)
+
+    var buffer = ByteArray(bufferSize)
 
     @Async
     fun reactiveStartPlaying(): Flux<ByteArray> {
         var bytesRead = inputStream.read(buffer)
+
+        val tempBuffer = ByteArray(bufferSize)
 
         return Flux.create<ByteArray> { sub ->
             if (bytesRead > 0)
                 isPlaying = true // Evita fazer isso dentro do while toda hora
 
             while (bytesRead > 0) {
-                sub.next(buffer.copyOf())
-                bytesRead = inputStream.read(buffer, 0, bytesRead)
-                Thread.sleep(100)
+                fillBuffer(tempBuffer.copyOf())
+                sub.next(buffer)
+                bytesRead = inputStream.read(tempBuffer, 0, bytesRead)
+                Thread.sleep(800)
             }
             isPlaying = false
         }
+    }
+
+    fun fillBuffer(input: ByteArray): ByteArray {
+        this.buffer = input.copyOf()
+        return buffer
     }
 
     fun readBuffer(): Flux<ByteArray> {
