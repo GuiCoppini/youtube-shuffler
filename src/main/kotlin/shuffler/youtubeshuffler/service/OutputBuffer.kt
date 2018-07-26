@@ -36,7 +36,7 @@ class OutputBuffer {
                 fillBuffer(tempBuffer.copyOf())
                 sub.next(buffer)
                 bytesRead = inputStream.read(tempBuffer, 0, bytesRead)
-                Thread.sleep(800)
+                Thread.sleep(1000)
             }
             isPlaying = false
         }
