@@ -3,6 +3,8 @@ function fetchBytes() {
         var reader = response.body.getReader();
         var bytesReceived = 0;
 
+        // read() returns a promise that resolves
+        // when a value has been received
         return reader.read().then(function processResult(result) {
             if (result.done) {
                 console.log("Fetch complete");
@@ -13,26 +15,10 @@ function fetchBytes() {
             bytesReceived += result.value.length;
             console.log('Received', bytesReceived, 'bytes of data so far');
 
+            // Read some more, and call this function again
             return reader.read().then(processResult);
         });
     });
-}
-
-
-window.onload = init;
-var context;    // Audio context
-var buf;        // Audio buffer
-
-function init() {
-if (!window.AudioContext) {
-    if (!window.webkitAudioContext) {
-        alert("Your browser does not support any AudioContext and cannot play back this audio.");
-        return;
-    }
-        window.AudioContext = window.webkitAudioContext;
-    }
-
-    context = new AudioContext();
 }
 
 function playByteArray(byteArray) {
@@ -45,18 +31,6 @@ function playByteArray(byteArray) {
 
     context.decodeAudioData(arrayBuffer, function(buffer) {
         buf = buffer;
-        volume = 0.3;
         play();
     });
-}
-
-// Play the loaded file
-function play() {
-    // Create a source node from the buffer
-    var source = context.createBufferSource();
-    source.buffer = buf;
-    // Connect to the final output node (the speakers)
-    source.connect(context.destination);
-    // Play immediately
-    source.start(0);
 }
