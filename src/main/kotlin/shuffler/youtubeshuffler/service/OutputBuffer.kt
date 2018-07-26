@@ -1,24 +1,27 @@
 package shuffler.youtubeshuffler.service
 
+import com.mpatric.mp3agic.Mp3File
+
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.util.ResourceUtils
 import reactor.core.publisher.Flux
-
 @Service
 class OutputBuffer {
 
+    val mp3 = Mp3File(ResourceUtils.getFile("classpath:tetris-mp3.mp3"))
     // TODO deve virar um property depois
-    val bufferSize: Int = 8066
+    val bufferSize: Int = mp3.bitrate * 1024 / 8
+
     var isPlaying: Boolean = false
 
-    // 661.371 bytes
-    // 1 min 22 seconds = 82 seconds
-    // 8066 bytes per second
+
+    // bitrate = 64 kbps
+    // 64 * 1024 / 8
+    // 8192 bytes
     val inputStream = ResourceUtils.getFile("classpath:tetris-mp3.mp3")
             .readBytes()
             .inputStream()
-
 
     var buffer = ByteArray(bufferSize)
 
@@ -47,40 +50,12 @@ class OutputBuffer {
         return buffer
     }
 
-    fun readBuffer(): Flux<ByteArray> {
-        return reactiveStartPlaying().doOnEach {
-
-        }
+    fun mp3Stats() {
+        println("AS COISA DO MP3:")
+        println(mp3.bitrate)
+        println(mp3.sampleRate)
+        println(mp3.lengthInSeconds)
     }
-
-}
-fun main(args: Array<String>) {
-
-    var x = 0
-    val flux = Flux.create<String> {
-        x++
-        while (true) {
-            it.next("flux")
-            println("x vale $x")
-            Thread.sleep(5000)
-        }
-    }
-
-    val thread1 = Thread {
-        flux.doOnEach {
-            println("t1 recebeu $it")
-        }.subscribe()
-    }
-
-    val thread2 = Thread {
-        flux.doOnEach {
-            println("t2 recebeu $it")
-        }
-    }
-    thread1.isDaemon = true
-    thread1.start()
-    thread2.start()
-
 }
 
 

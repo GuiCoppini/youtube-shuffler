@@ -25,6 +25,7 @@ class TestController {
 
         println("Comecou a tocar")
 
+        outputBuffer.mp3Stats()
 
         if (!outputBuffer.isPlaying) {
             outputBuffer.reactiveStartPlaying().subscribe {
@@ -35,16 +36,6 @@ class TestController {
                 } catch (ex: IOException) {
                     println("Browser closed connection, but song is still playing.")
 
-                }
-            }
-        } else {
-            outputBuffer.readBuffer().doOnNext {
-                try {
-                    response.outputStream.write(it)
-                    response.outputStream.flush()
-                    println("Escreveu ${Arrays.toString(it)}")
-                } catch (ex: IOException) {
-                    println("Browser closed connection, but song is still playing.")
                 }
             }
         }
