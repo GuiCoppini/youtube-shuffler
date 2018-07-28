@@ -1,13 +1,11 @@
 package shuffler.youtubeshuffler.controller
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE
 import org.springframework.util.ResourceUtils
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import shuffler.youtubeshuffler.service.SongTimer
-import java.util.*
 import javax.servlet.http.HttpServletResponse
 
 @CrossOrigin
