@@ -29,11 +29,10 @@ class TestController {
     }
 
     @RequestMapping("/start-get-time")
-    fun startPlaying(response: HttpServletResponse) : Long {
-        val out = response.outputStream
+    fun startPlaying(response: HttpServletResponse) : Double {
         if(!songTimer.isPlaying) {
             songTimer.startPlaying()
         }
-        return songTimer.currentTime
+        return songTimer.currentTime()
     }
 }
