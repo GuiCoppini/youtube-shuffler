@@ -50,8 +50,7 @@ dependencies {
 	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
 	compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
 
-	compile group: 'com.mpatric', name: 'mp3agic', version: '0.9.1'
-	compile 'com.iheartradio.m3u8:open-m3u8:0.2.4'
+	compile group: 'com.googlecode.soundlibs', name: 'mp3spi', version: '1.9.5-1'
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('io.projectreactor:reactor-test')
