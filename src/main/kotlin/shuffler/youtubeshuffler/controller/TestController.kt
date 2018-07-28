@@ -29,21 +29,11 @@ class TestController {
     }
 
     @RequestMapping("/start-get-time")
-    fun startPlaying(response: HttpServletResponse) {
+    fun startPlaying(response: HttpServletResponse) : Long {
         val out = response.outputStream
         if(!songTimer.isPlaying) {
-            songTimer.startPlaying().subscribe {
-                out.println(it)
-                out.close()
-            }
-        } else {
-            out.println(getTime())
-            out.close()
+            songTimer.startPlaying()
         }
-    }
-
-    @RequestMapping("/time")
-    fun getTime() : Long {
         return songTimer.currentTime
     }
 }

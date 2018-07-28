@@ -4,6 +4,7 @@ import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader
 import org.springframework.stereotype.Service
 import org.springframework.util.ResourceUtils
 import reactor.core.publisher.Flux
+import reactor.core.scheduler.Schedulers
 
 
 @Service
@@ -16,23 +17,21 @@ class SongTimer {
 
 //    val songDuration =
 
-    fun startPlaying(): Flux<Long> {
+    fun startPlaying() {
         if (!isPlaying) {
             isPlaying = true
             val properties = MpegAudioFileReader().getAudioFileFormat(fileIn).properties()
             val duration: Long = properties["duration"] as Long / 1000000
-            return Flux.create<Long> {
+            Flux.create<Long> {
                 while (currentTime < duration) {
-                    it.next(currentTime + 1)
-                    currentTime += 1
+                    it.next(currentTime)
                     println("Tempo: $currentTime")
+                    currentTime += 1
                     Thread.sleep(1000)
                 }
                 isPlaying = false
-            }
+            }.subscribeOn(Schedulers.parallel()).subscribe()
         }
-        return Flux.create {
-            it.next(currentTime)
-        }
+        println("Vai retornar o start")
     }
 }
