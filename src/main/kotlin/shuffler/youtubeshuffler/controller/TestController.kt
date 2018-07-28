@@ -1,45 +1,36 @@
 package shuffler.youtubeshuffler.controller
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.util.ResourceUtils
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import shuffler.youtubeshuffler.service.OutputBuffer
-import java.io.IOException
-import java.util.*
+import shuffler.youtubeshuffler.service.SongTimer
 import javax.servlet.http.HttpServletResponse
-
 
 @CrossOrigin
 @RestController
 class TestController {
 
+
     @Autowired
-    lateinit var outputBuffer: OutputBuffer
+    lateinit var songTimer: SongTimer
 
-
-    @RequestMapping(path = ["/"])
-    fun getString(response: HttpServletResponse) {
+    @RequestMapping(path = ["/get-song"])
+    fun getSong(response: HttpServletResponse) {
+        val out = response.outputStream
         response.contentType = "audio/mpeg"
-//        response.contentType = "application/octet-stream"
-        response.setHeader("Transfer-Encoding", "chunked")
+        val fileIn = ResourceUtils.getFile("classpath:tetris-mp3.mp3")
+        val bytes = fileIn.readBytes()
 
-        println("Comecou a tocar")
+        out.write(bytes)
+    }
 
-        outputBuffer.mp3Stats()
-
-        if (!outputBuffer.isPlaying) {
-            outputBuffer.reactiveStartPlaying().subscribe {
-                try {
-                    response.outputStream.write(it)
-                    response.outputStream.flush()
-                    println("Escreveu ${Arrays.toString(it)}")
-                } catch (ex: IOException) {
-                    println("Browser closed connection, but song is still playing.")
-
-                }
-            }
+    @RequestMapping("/start-get-time")
+    fun startPlaying(response: HttpServletResponse) : Double {
+        if(!songTimer.isPlaying) {
+            songTimer.startPlaying()
         }
+        return songTimer.currentTime()
     }
 }
-

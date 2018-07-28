@@ -1,28 +1,13 @@
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
-var context = new AudioContext();
+var audio = document.getElementById("audio");
 
-function firstFetch() {
-    fetch("http://localhost:8080/").then(response => {
-
-      var reader = response.body.getReader();
-      var bytesReceived = 0;
-
-      return reader.read().then(function processResult(result) {
-        if (result.done) {
-          console.log("Fetch complete");
-          return;
-        }
-        context.decodeAudioData(result.value.buffer, function(buffer) {
-              var source = context.createBufferSource();
-              source.buffer = buffer;
-              source.connect(context.destination);
-              source.start(0);
-        });
-
-        bytesReceived += result.value.length;
-        console.log('Received', bytesReceived, 'bytes of data so far');
-
-        return reader.read().then(processResult);
-      });
-    });
+function syncTime() {
+        console.log("play")
+        var oReq = new XMLHttpRequest();
+        oReq.onload = function() {
+            console.log("Current time: "+ oReq.response)
+            audio.currentTime = oReq.response;
+            audio.play();
+        };
+        oReq.open("get", "http://localhost:8080/start-get-time", true);
+        oReq.send();
 }
