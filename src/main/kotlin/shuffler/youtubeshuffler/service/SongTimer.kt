@@ -25,6 +25,7 @@ class SongTimer {
                 while (currentTime < duration) {
                     it.next(currentTime + 1)
                     currentTime += 1
+                    println("Tempo: $currentTime")
                     Thread.sleep(1000)
                 }
                 isPlaying = false

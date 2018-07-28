@@ -18,9 +18,10 @@ class TestController {
     @Autowired
     lateinit var songTimer: SongTimer
 
-    @RequestMapping(path = ["/get-song"], produces = [TEXT_EVENT_STREAM_VALUE])
+    @RequestMapping(path = ["/get-song"])
     fun getSong(response: HttpServletResponse) {
         val out = response.outputStream
+        response.contentType = "audio/mpeg"
         val fileIn = ResourceUtils.getFile("classpath:tetris-mp3.mp3")
         val bytes = fileIn.readBytes()
 
