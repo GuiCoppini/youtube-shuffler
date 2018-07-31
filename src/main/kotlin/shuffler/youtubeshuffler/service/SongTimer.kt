@@ -11,10 +11,10 @@ class SongTimer {
 
     fun startPlaying() {
         if(startTimeInMillis == 0L)
-            startTimeInMillis = System.currentTimeMillis()
+            startTimeInMillis = System.nanoTime()
     }
 
     fun currentTime():Double {
-        return (System.currentTimeMillis() - startTimeInMillis).div(1000.0)
+        return (System.nanoTime() - startTimeInMillis).div(1000000000.0)
     }
 }
