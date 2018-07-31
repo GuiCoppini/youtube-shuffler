@@ -14,6 +14,6 @@
 
 ## Ideas:
 - As it is unable to change songs and play next ones, the ideas are:
-  |- The backend returns the actual time of the song and the name of the song;
-  |- The frontend checks if this is the actual song; if not, it downloads the new one.
-    |- It might be possible to download next songs as the first one is playing.
+  - The backend returns the actual time of the song and the name of the song;
+  - The frontend checks if this is the actual song; if not, it downloads the new one.
+    - It might be possible to download next songs as the first one is playing.
