@@ -1,11 +1,15 @@
 package shuffler.youtubeshuffler.controller
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.util.ResourceUtils
+import org.springframework.http.MediaType
+import org.springframework.util.StringUtils
 import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import shuffler.youtubeshuffler.service.SongTimer
+import shuffler.youtubeshuffler.payload.SongRequest
+import shuffler.youtubeshuffler.payload.SongResponse
+import shuffler.youtubeshuffler.service.SongManager
 import javax.servlet.http.HttpServletResponse
 
 @CrossOrigin
@@ -14,15 +18,19 @@ class TestController {
 
 
     @Autowired
-    lateinit var songTimer: SongTimer
+    lateinit var songManager: SongManager
 
     @RequestMapping(path = ["/get-song"])
     fun getSong(response: HttpServletResponse) {
+        if(StringUtils.isEmpty(songManager.actualSongName)) {
+            println("There is no song set!")
+            throw RuntimeException("No song set!")
+        }
         println("Uploading MP3")
         val out = response.outputStream
         response.contentType = "audio/mpeg"
-        val fileIn = ResourceUtils.getFile("classpath:tetris-mp3.mp3")
-        val bytes = fileIn.readBytes()
+        val fileIn = songManager.getMp3ByName(songManager.actualSongName!!)
+        val bytes = fileIn!!.readBytes()
 
         out.write(bytes)
 
@@ -30,12 +38,23 @@ class TestController {
     }
 
     @RequestMapping("/start-get-time")
-    fun startPlaying(response: HttpServletResponse) : Double {
-        if(!songTimer.isPlaying) {
+    fun startPlaying(response: HttpServletResponse): SongResponse {
+
+        if(StringUtils.isEmpty(songManager.actualSongName)) {
+            println("There is no song set!")
+            throw RuntimeException("No song set!")
+        }
+
+        if (!songManager.isPlaying) {
             println("startPlaying being called")
-            songTimer.startPlaying()
+            songManager.startPlaying()
         }
         println("Time being requested")
-        return songTimer.currentTime()
+        return SongResponse(songManager.currentTime(), songManager.actualSongName!!)
+    }
+
+    @RequestMapping(path= ["/set-song"], consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun setSong(@RequestBody songName: SongRequest) {
+        songManager.setCurrentSong(songName.name)
     }
 }
