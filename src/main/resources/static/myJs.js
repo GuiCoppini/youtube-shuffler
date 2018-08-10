@@ -12,10 +12,13 @@ function syncTime() {
 
 function setSongFromInput() {
     var songName = $('#song-name').val()
+    console.log(songName)
     $.ajax({
         url: "http://localhost:8080/set-song",
         type: "POST",
-        data: {song_name: songName},
+        data: JSON.stringify({
+            song_name : songName
+        }),
         contentType: "application/json",
         dataType: "json",
         success: function(response, status) {

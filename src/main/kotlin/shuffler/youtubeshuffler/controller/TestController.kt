@@ -3,10 +3,7 @@ package shuffler.youtubeshuffler.controller
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.util.StringUtils
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import shuffler.youtubeshuffler.payload.SongRequest
 import shuffler.youtubeshuffler.payload.SongResponse
 import shuffler.youtubeshuffler.service.SongManager
@@ -53,8 +50,9 @@ class TestController {
         return SongResponse(songManager.currentTime(), songManager.actualSongName!!)
     }
 
-    @RequestMapping(path= ["/set-song"], consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @PostMapping(path= ["/set-song"], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun setSong(@RequestBody songName: SongRequest) {
+        println("Setting song to ${songName.name}")
         songManager.setCurrentSong(songName.name)
     }
 }

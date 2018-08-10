@@ -12,15 +12,15 @@ class SongManager {
     var actualSongName: String? = null
     var actualSongMp3: File? = null
 
-    var startTimeInNanoSeconds: Long = 0
+    var startTimeInNanoSeconds: Long? = null
 
     fun startPlaying() {
-        if (startTimeInNanoSeconds == 0L)
+        if (startTimeInNanoSeconds == null)
             startTimeInNanoSeconds = System.nanoTime()
     }
 
     fun currentTime(): Double {
-        return (System.nanoTime() - startTimeInNanoSeconds).div(1000000000.0)
+        return (System.nanoTime() - startTimeInNanoSeconds!!).div(1000000000.0)
     }
 
     fun getMp3ByName(name: String): File? {
@@ -33,12 +33,14 @@ class SongManager {
 
 
     fun setCurrentSong(name: String) {
-        val mp3 = getMp3ByName(name)
-        if(mp3 == null) {
-            throw NotFoundException("MP3 file named ${name} not found!")
-        }
+        val mp3 = getMp3ByName(name) ?: throw NotFoundException("MP3 file named ${name} not found!")
         actualSongMp3 = mp3!!
         actualSongName = name
+        resetStartTime()
         startPlaying()
+    }
+
+    private fun resetStartTime() {
+        startTimeInNanoSeconds = null
     }
 }
