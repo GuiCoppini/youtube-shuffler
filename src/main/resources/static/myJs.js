@@ -4,6 +4,7 @@ function syncTime() {
     $.get("http://localhost:8080/start-get-time", function(data, status){
         console.log("Current time: "+ data.current_time)
         console.log("Current song: "+ data.song_name)
+        $('#now-playing').text("Now playing: "+ data.song_name);
         audio.currentTime = data.current_time;
         audio.volume = 0.3;
         audio.play();
